@@ -1,46 +1,41 @@
-<script setup lang="ts" generic="T extends any, O extends any">
-defineOptions({
-  name: 'IndexPage',
+<script setup lang="ts">
+import type { IAlumno, IDocente, IMateria } from '~/assets/interfaces/index'
+import { listDocentes } from '~/assets/services/docente'
+import { listAlumnos } from '~/assets/services/alumno'
+import { listMaterias } from '~/assets/services/materia'
+
+const docentes = ref<IDocente[]>([])
+const alumnos = ref<IAlumno[]>([])
+const materias = ref<IMateria[]>([])
+
+onMounted(async () => {
+  docentes.value = await listDocentes()
+  alumnos.value = await listAlumnos()
+  materias.value = await listMaterias()
 })
-
-const name = ref('')
-
-const router = useRouter()
-function go() {
-  if (name.value)
-    router.push(`/hi/${encodeURIComponent(name.value)}`)
-}
 </script>
 
 <template>
   <div>
-    <div i-carbon-campsite inline-block text-4xl />
-    <p>
-      <a rel="noreferrer" href="https://github.com/antfu/vitesse-lite" target="_blank">
-        Vitesse Lite
-      </a>
-    </p>
-    <p>
-      <em text-sm op75>Opinionated Vite Starter Template</em>
-    </p>
+    <h1>listado de profesores</h1>
+    <ul>
+      <li v-for="(item, index) in docentes" :key="index">
+        {{ item.nombre }}
+      </li>
+    </ul>
 
-    <div py-4 />
+    <h1>listado de alumnos</h1>
+    <ul>
+      <li v-for="(item, index) in alumnos" :key="index">
+        {{ item.nombre }}
+      </li>
+    </ul>
 
-    <TheInput
-      v-model="name"
-      placeholder="What's your name?"
-      autocomplete="false"
-      @keydown.enter="go"
-    />
-
-    <div>
-      <button
-        class="m-3 text-sm btn"
-        :disabled="!name"
-        @click="go"
-      >
-        Go
-      </button>
-    </div>
+    <h1>listado de materias</h1>
+    <ul>
+      <li v-for="(item, index) in materias" :key="index">
+        {{ item.nombre }}
+      </li>
+    </ul>
   </div>
 </template>
